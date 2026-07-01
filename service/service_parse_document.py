@@ -24,5 +24,5 @@ async def parse_document(file: UploadFile) -> ParseResponse:
     return ParseResponse(
         filename= file.filename,
         total_pages= len(pages),
-        pages= pages
+        data= pages
     )
