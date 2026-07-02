@@ -1,3 +1,6 @@
+"""
+Component untuk parsing dokumen dengan PyMuPDF.
+"""
 from pathlib import Path
 
 import fitz
@@ -6,8 +9,14 @@ from dto.dto_page_content import PageContent
 
 
 class PyMuPDFParser:
+    """Class component PyMuPDF Parser"""
 
-    async def parse(self, file_path: Path) -> list[PageContent]:
+    def parse(self, file_path: Path) -> list[PageContent]:
+        """Function untuk parsing content menggunakan PyMuPDF.
+
+        CPU-bound & sinkron — dipanggil lewat thread pool oleh service agar
+        tidak memblok event loop.
+        """
         document = fitz.open(file_path)
         pages: list[PageContent] = []
 
