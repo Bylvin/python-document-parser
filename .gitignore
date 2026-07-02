@@ -1,6 +1,7 @@
 # Project Docs
 uploads/
 docs/
+graphify-out/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
