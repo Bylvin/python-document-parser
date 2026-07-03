@@ -3,6 +3,11 @@ uploads/
 docs/
 graphify-out/
 
+# OCR temp (di-mount ke container tesseract)
+.ocr_tmp/
+# Language data Tesseract (binary ~8MB, diunduh terpisah, jangan dikomit)
+tessdata/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

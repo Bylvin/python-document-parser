@@ -1,0 +1,31 @@
+# Sidecar Tesseract untuk OCR.
+#
+# PENTING: aplikasi TIDAK di-container-kan — tetap dijalankan via `uvicorn` di
+# host Windows. Container di bawah HANYA menyediakan binary `tesseract` (agar
+# Anda tak perlu install Tesseract di Windows). App memanggilnya lewat wrapper
+# `tesseract-docker.cmd` -> `docker exec`.
+#
+# Jalankan sidecar-nya:  docker compose up -d tesseract
+# Hentikan:              docker compose down
+
+services:
+  tesseract:
+    # Pakai image publik yang sudah di-pull. Image ini berisi eng/equ/osd tapi
+    # TIDAK ada bahasa Indonesia, jadi ind.traineddata di-mount dari host.
+    image: jitesoft/tesseract-ocr
+    container_name: doc-parser-tesseract
+
+    # Image ini punya entrypoint sendiri yang menjalankan tesseract lalu keluar.
+    # Override agar container idle & persisten; OCR dipanggil per halaman via
+    # `docker exec` (jauh lebih murah daripada `docker run` baru tiap panggilan).
+    entrypoint: ["sleep", "infinity"]
+
+    volumes:
+      # Bahasa Indonesia (tidak ada di image) -> tessdata container.
+      - ./tessdata/ind.traineddata:/usr/local/share/tessdata/ind.traineddata:ro
+      # Folder temp OCR (dibuat app saat OCR_ENGINE=tesseract) di-mount agar
+      # tesseract di container bisa membaca gambar halaman yang ditulis app.
+      # Harus sama dengan settings.OCR_TMP_DIR di sisi app.
+      - ./.ocr_tmp:/ocr_tmp
+
+    restart: unless-stopped
